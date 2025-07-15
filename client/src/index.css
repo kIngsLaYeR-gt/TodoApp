@@ -82,19 +82,7 @@ button:focus-visible {
 .button-animation:hover {
   animation: button 100ms linear forwards;
 }
-/* .afterGradient {
-  background: linear-gradient(to right, #ff00cc, #3333ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: background 0.5s ease;
-}
-.afterGradient:hover {
-  background: linear-gradient(to right, #00ffcc, #ffcc00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-} */
-
-.animated-text {
+/* .animated-text {
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bold;
   color: transparent;
@@ -119,4 +107,4 @@ button:focus-visible {
   100% {
     background-position: 0% 50%;
   }
-}
+} */

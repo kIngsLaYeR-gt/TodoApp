@@ -24,10 +24,8 @@ const Login = () => {
         withCredentials:true
       });
       if (res.data.success) {
-        if(!toast.loading){
           toast.success(res.data.message);
           navigate("/");
-        }
       }
     } catch (error) {
       toast.error(error.response?.data?.message);

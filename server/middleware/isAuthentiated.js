@@ -9,14 +9,14 @@ const isAuthenticated = async (req, res, next) => {
         message: "User not Authenticated",
       });
     }
-    const decode =await jwt.verify(token, process.env.SECRET_KEY);
+    const decode = await jwt.verify(token, process.env.SECRET_KEY);
     if (!decode) {
       return res.status(401).json({
         success: false,
         message: "Invalid token",
       });
     }
-    req.id = decode.userId;
+    req.id = decode.userId; // Changed from req.id to req.userId for clarity
     next();
   } catch (error) {
     console.log("middleware error", error);
@@ -26,4 +26,5 @@ const isAuthenticated = async (req, res, next) => {
     });
   }
 };
+
 export default isAuthenticated;

@@ -1,17 +1,23 @@
 import { Todo } from "../models/todo.js";
+
 export const createTodo = async (req, res) => {
   try {
     const { title, description } = req.body;
+    const userId = req.id; // From middleware
+
     if (!title || !description) {
       return res.status(403).json({
         success: false,
-        message: "All fiels are required",
+        message: "All fields are required",
       });
     }
+
     const todo = await Todo.create({
       title,
       description,
+      user: userId
     });
+
     return res.status(201).json({
       success: true,
       message: "Todo Successfully Added",
@@ -26,12 +32,15 @@ export const createTodo = async (req, res) => {
     });
   }
 };
+
 export const getAllTodo = async (req, res) => {
   try {
-    const todos = await Todo.find();
+    const userId = req.id; // From middleware
+    const todos = await Todo.find({ user: userId });
+
     return res.status(200).json({
       success: true,
-      message:"new",
+      message: "Todos retrieved successfully",
       todos,
     });
   } catch (error) {
@@ -43,12 +52,15 @@ export const getAllTodo = async (req, res) => {
     });
   }
 };
+
 export const deleteAllTodos = async (req, res) => {
   try {
-    await Todo.deleteMany({}); // deletes all todos
+    const userId = req.id; // From middleware
+    await Todo.deleteMany({ user: userId });
+
     return res.status(200).json({
       success: true,
-      message: "All todos deleted successfully",
+      message: "All your todos deleted successfully",
     });
   } catch (error) {
     console.error("Error deleting todos:", error);
@@ -58,36 +70,37 @@ export const deleteAllTodos = async (req, res) => {
     });
   }
 };
+
 export const updateTodo = async (req, res) => {
-    try {
-        const todoId = req.params.todoId;
-        const { title } = req.body;
+  try {
+    const todoId = req.params.todoId;
+    const { title } = req.body;
+    const userId = req.id; // From middleware
 
-        const todo = await Todo.findByIdAndUpdate(
-            todoId,
-            { title },
-            { new: true }
-        );
+    const todo = await Todo.findOneAndUpdate(
+      { _id: todoId, user: userId },
+      { title },
+      { new: true }
+    );
 
-        if (!todo) {
-            return res.status(404).json({
-                success: false,
-                message: "Todo not found"
-            });
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: "Title successfully updated",
-            updatedTodo: todo
-        });
-
-    } catch (error) {
-        console.error("Error updating todo:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error",
-            error: error.message
-        });
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "Todo not found or you don't have permission"
+      });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Title successfully updated",
+      updatedTodo: todo
+    });
+  } catch (error) {
+    console.error("Error updating todo:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
 };
